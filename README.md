@@ -1,2 +1,2 @@
-# vim-config
-My own nvim configuration files
+# Vim Config
+Repositorio con mi configuración para nvim
