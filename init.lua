@@ -13,9 +13,14 @@ vim.opt.tabstop = 2
 vim.opt.shiftwidth = 2
 vim.opt.shiftround = true
 vim.opt.expandtab = true
+vim.opt.grepprg = "grep -HRIn $* ."
+
+vim.keymap.set("n", "<Leader>gg", ":copen | :silent :grep ")
+vim.keymap.set("n", "]q", ":cnext <CR>")
+vim.keymap.set("n", "[q", ":cprev <CR>")
 
 -- Coloscheme and relative line numbers
-vim.cmd "colorscheme gruvbox" 
+vim.cmd "colorscheme gruvbox"
 vim.cmd "set nu"
 vim.cmd "set rnu"
 
