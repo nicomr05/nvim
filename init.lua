@@ -20,10 +20,11 @@ vim.keymap.set("n", "]q", ":cnext <CR>")
 vim.keymap.set("n", "[q", ":cprev <CR>")
 
 -- Coloscheme and relative line numbers
-vim.cmd "retab 4"
-vim.cmd "colorscheme spacecamp_lite"
+--vim.cmd "colorscheme spacecamp_lite"
+vim.cmd "colorscheme xcodedarkhc"
 vim.cmd "set nu"
 vim.cmd "set rnu"
+vim.cmd "retab 4"
 
 vim.cmd [[ set noswapfile ]]
 vim.cmd [[ set termguicolors ]]
@@ -35,5 +36,5 @@ vim.wo.number = true
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
--- vim.o.background = "dark"
--- vim.o.termguicolors = true
+vim.o.background = "dark"
+vim.o.termguicolors = true

@@ -21,7 +21,7 @@ if exists("syntax_on")
   syntax reset
 endif
 
-let g:colors_name="spacecamp_lite"
+let g:colors_name="spacecamp"
 
 " ==========================
 " Highlighting Function
@@ -42,7 +42,7 @@ endfun
 " ==========================
 " Color Variables
 " ==========================
-let s:spaceBlack = {'gui': '#1C1C1C', 'cterm256': '234'}
+let s:spaceBlack = {'gui': '#121212', 'cterm256': '233'}
 let s:spaceBlack2 = {'gui': '#262626', 'cterm256': '235'}
 let s:spaceGray1 = {'gui': '#3E3D32', 'cterm256': '237'}
 let s:spaceGray2 = {'gui': '#49483E', 'cterm256': '239'}
@@ -81,8 +81,8 @@ call <sid>hi('MatchParen', s:spaceWhite, s:spaceGray1, 'none')
 call <sid>hi('Normal', s:spaceWhite, s:spaceBlack, 'none')
 call <sid>hi('Pmenu', s:none, s:spaceBlack2, 'none')
 call <sid>hi('PmenuSel', s:none, s:spaceGray2, 'none')
-call <sid>hi('SignColumn', s:none, s:spaceBlack2, 'none')
 call <sid>hi('Search', s:spaceBlack, s:spaceBlue, 'none')
+call <sid>hi('SignColumn', s:none, s:spaceBlack2, 'none')
 call <sid>hi('StatusLine', s:spaceBlack, s:spaceSteel, 'none')
 call <sid>hi('StatusLineNC', s:spaceGray3, s:spaceBlack2, 'none')
 call <sid>hi('VertSplit', s:spaceGray3, s:spaceGray3, 'none')
