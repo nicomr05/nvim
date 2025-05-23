@@ -23,8 +23,9 @@ vim.keymap.set("n", "]q", ":cnext <CR>")
 vim.keymap.set("n", "[q", ":cprev <CR>")
 
 -- Colorscheme and relative line numbers
+vim.cmd "colorscheme ayu"
 --vim.cmd "colorscheme spacecamp_lite"
-vim.cmd "colorscheme xcodedarkhc"
+--vim.cmd "colorscheme xcodedarkhc"
 vim.cmd "set nu"
 vim.cmd "set rnu"
 vim.cmd "retab 4"
