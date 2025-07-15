@@ -454,6 +454,10 @@ local function file_type()
   local icons = {
     lua = "[LUA]",
     python = "[PY]",
+    c = "[C]",
+    cpp = "[C++]",
+    jl = "[JL]",
+    jar = "[JAVA]",
     javascript = "[JS]",
     html = "[HTML]",
     css = "[CSS]",
