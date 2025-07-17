@@ -433,7 +433,8 @@ local function file_type()
     markdown = "[MD]",
     vim = "[VIM]",
     sh = "[SH]",
-    dockerfile = "[DOCKER]"
+    dockerfile = "[DOCKER]",
+    yaml = "[YAML]"
   }
 
   if ft == "" then
