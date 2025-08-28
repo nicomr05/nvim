@@ -2,7 +2,11 @@
 vim.g.python3_host_prog = "/usr/bin/python3"
 
 -- Theme & transparency
-vim.cmd "colorscheme ayu"
+vim.cmd "colorscheme slate"
+--vim.cmd "colorscheme ayu"
+--vim.cmd "colorscheme unokai"
+--vim.cmd "colorscheme hemisu"
+--vim.cmd "colorscheme habamax"
 --vim.cmd "colorscheme spacecamp_lite"
 --vim.cmd "colorscheme xcodedarkhc"
 vim.api.nvim_set_hl(0, "Normal", { bg = "none"})
@@ -469,7 +473,7 @@ local function file_type()
     c = "[C]",
     cpp = "[C++]",
     jl = "[JL]",
-    jar = "[JAVA]",
+    java = "[JAVA]",
     javascript = "[JS]",
     html = "[HTML]",
     css = "[CSS]",
@@ -478,14 +482,15 @@ local function file_type()
     vim = "[VIM]",
     sh = "[SH]",
     dockerfile = "[DOCKER]",
-    yaml = "[YAML]"
+    yaml = "[YAML]",
+    conf = "[CONF]"
   }
 
   if ft == "" then
     return "  "
   end
 
-  return (icons[ft] or ft)
+  return (icons[ft] or string.upper(string.format("[%s]", ft)))
 end
 
 -- Word count for text files
