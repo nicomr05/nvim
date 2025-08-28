@@ -2,12 +2,13 @@
 -- nicomr's nvim config files
 -- ================================================================================================
 
-require('config.colorschemes')
-require('config.floatingterminal')
-require('config.functions')
+-- Note: Changing the order of the 'require' calls could result in the malfunctioning of some characteristics
 require('config.globals')
-require('config.keymaps')
-require('config.lsp')
+require('config.colorschemes')
 require('config.options')
-require('config.statusline')
+require('config.keymaps')
+require('config.functions')
+require('config.floatingterminal')
 require('config.tabs')
+require('config.statusline')
+require('config.lsp')
