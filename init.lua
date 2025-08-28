@@ -1,3 +1,7 @@
+-- ================================================================================================
+-- title: nicomr's nvim config fork
+-- ================================================================================================
+
 -- Python manager
 vim.g.python3_host_prog = "/usr/bin/python3"
 
@@ -21,9 +25,10 @@ vim.opt.cursorline = true                          -- Highlight current line
 vim.opt.wrap = false                               -- Don't wrap lines
 vim.opt.scrolloff = 10                             -- Keep 10 lines above/below cursor 
 vim.opt.sidescrolloff = 8                          -- Keep 8 columns left/right of cursor
+vim.opt.winborder = 'rounded'
 
-vim.opt.showcmd = true
-vim.opt.laststatus = 2
+--vim.opt.showcmd = true
+--vim.opt.laststatus = 2
 
 -- Indentation
 vim.opt.tabstop = 2                                -- Tab width
@@ -33,7 +38,7 @@ vim.opt.expandtab = true                           -- Use spaces instead of tabs
 vim.opt.smartindent = true                         -- Smart auto-indentation
 vim.opt.autoindent = true                          -- Copy indent from current line
 
-vim.opt.shiftround = true
+--vim.opt.shiftround = true
 
 -- Search settings
 vim.opt.ignorecase = true                          -- Case insensitive search
