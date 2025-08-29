@@ -4,7 +4,7 @@
 -- ================================================================================================
 
 -- theme & transparency
-vim.cmd.colorscheme("unokai")
+vim.cmd[[colorscheme slate]]
 vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
 vim.api.nvim_set_hl(0, "NormalNC", { bg = "none" })
 vim.api.nvim_set_hl(0, "EndOfBuffer", { bg = "none" })
@@ -77,9 +77,9 @@ vim.opt.encoding = "UTF-8"                         -- Set encoding
 vim.opt.guicursor = "n-v-c:block,i-ci-ve:block,r-cr:hor20,o:hor50,a:blinkwait700-blinkoff400-blinkon250-Cursor/lCursor,sm:block-blinkwait175-blinkoff150-blinkon175"
 
 -- Folding settings
-vim.opt.foldmethod = "expr"                        -- Use expression for folding
-vim.opt.foldexpr = "nvim_treesitter#foldexpr()"    -- Use treesitter for folding
-vim.opt.foldlevel = 99                             -- Start with all folds open
+vim.opt.foldmethod = "expr"                             -- Use expression for folding
+vim.wo.vim.foldexpr = "v:lua.vim.treesitter.foldexpr()" -- Use treesitter for folding
+vim.opt.foldlevel = 99                                  -- Start with all folds open
 
 -- Split behavior
 vim.opt.splitbelow = true                          -- Horizontal splits go below
@@ -92,17 +92,11 @@ vim.g.maplocalleader = " "                         -- Set local leader key (NEW)
 -- Normal mode mappings
 vim.keymap.set("n", "<leader>c", ":nohlsearch<CR>", { desc = "Clear search highlights" })
 
--- Y to EOL
-vim.keymap.set("n", "Y", "y$", { desc = "Yank to end of line" })
-
 -- Center screen when jumping
 vim.keymap.set("n", "n", "nzzzv", { desc = "Next search result (centered)" })
 vim.keymap.set("n", "N", "Nzzzv", { desc = "Previous search result (centered)" })
 vim.keymap.set("n", "<C-d>", "<C-d>zz", { desc = "Half page down (centered)" })
 vim.keymap.set("n", "<C-u>", "<C-u>zz", { desc = "Half page up (centered)" })
-
--- Better paste behavior
-vim.keymap.set("x", "<leader>p", '"_dP', { desc = "Paste without yanking" })
 
 -- Delete without yanking
 vim.keymap.set({ "n", "v" }, "<leader>d", '"_d', { desc = "Delete without yanking" })
@@ -454,10 +448,6 @@ local function file_type()
   local icons = {
     lua = "[LUA]",
     python = "[PY]",
-    c = "[C]",
-    cpp = "[C++]",
-    jl = "[JL]",
-    jar = "[JAVA]",
     javascript = "[JS]",
     html = "[HTML]",
     css = "[CSS]",
@@ -472,6 +462,15 @@ local function file_type()
   end
 
   return (icons[ft] or ft)
+end
+
+-- LSP status
+local function lsp_status()
+  local clients = vim.lsp.get_clients({ bufnr = 0 })
+  if #clients > 0 then
+    return "  LSP "
+  end
+  return ""
 end
 
 -- Word count for text files
@@ -522,6 +521,7 @@ _G.mode_icon = mode_icon
 _G.git_branch = git_branch
 _G.file_type = file_type
 _G.file_size = file_size
+_G.lsp_status = lsp_status
 
 vim.cmd([[
   highlight StatusLineBold gui=bold cterm=bold
@@ -542,6 +542,8 @@ local function setup_dynamic_statusline()
       "%{v:lua.file_type()}",
       " | ",
       "%{v:lua.file_size()}",
+      " | ",
+      "%{v:lua.lsp_status()}",
       "%=",                     -- Right-align everything after this
       "%l:%c  %P ",             -- Line:Column and Percentage
     }
@@ -557,3 +559,185 @@ local function setup_dynamic_statusline()
 end
 
 setup_dynamic_statusline()
+
+-- ============================================================================
+-- LSP 
+-- ============================================================================
+
+-- Function to find project root
+local function find_root(patterns)
+  local path = vim.fn.expand('%:p:h')
+  local root = vim.fs.find(patterns, { path = path, upward = true })[1]
+  return root and vim.fn.fnamemodify(root, ':h') or path
+end
+
+-- Shell LSP setup
+local function setup_shell_lsp()
+  vim.lsp.start({
+    name = 'bashls',
+    cmd = {'bash-language-server', 'start'},
+    filetypes = {'sh', 'bash', 'zsh'},
+    root_dir = find_root({'.git', 'Makefile'}),
+    settings = {
+      bashIde = {
+        globPattern = "*@(.sh|.inc|.bash|.command)"
+      }
+    }
+  })
+end
+
+-- Python LSP setup
+local function setup_python_lsp()
+  vim.lsp.start({
+    name = 'pylsp',
+    cmd = {'pylsp'},
+    filetypes = {'python'},
+    root_dir = find_root({'pyproject.toml', 'setup.py', 'setup.cfg', 'requirements.txt', '.git'}),
+    settings = {
+      pylsp = {
+        plugins = { 
+          pycodestyle = {
+              enabled = false
+          },
+          flake8 = {
+              enabled = true,
+          },
+          black = { 
+              enabled = true
+          }
+        }
+      }
+    }
+  })
+end
+
+-- Auto-start LSPs based on filetype
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = 'sh,bash,zsh',
+  callback = setup_shell_lsp,
+  desc = 'Start shell LSP'
+})
+
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = 'python',
+  callback = setup_python_lsp,
+  desc = 'Start Python LSP'
+})
+
+-- formatting
+local function format_code()
+  local bufnr = vim.api.nvim_get_current_buf()
+  local filename = vim.api.nvim_buf_get_name(bufnr)
+  local filetype = vim.bo[bufnr].filetype
+  
+  -- Save cursor position
+  local cursor_pos = vim.api.nvim_win_get_cursor(0)
+  
+  if filetype == 'python' or filename:match('%.py$') then
+    if filename == '' then
+      print("Save the file first before formatting Python")
+      return
+    end
+    
+    local black_cmd = "black --quiet " .. vim.fn.shellescape(filename)
+    local black_result = vim.fn.system(black_cmd)
+    
+    if vim.v.shell_error == 0 then
+      vim.cmd('checktime')
+      vim.api.nvim_win_set_cursor(0, cursor_pos)
+      print("Formatted with black")
+      return
+    else
+      print("No Python formatter available (install black)")
+      return
+    end
+  end
+  
+  if filetype == 'sh' or filetype == 'bash' or filename:match('%.sh$') then
+    local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+    local content = table.concat(lines, '\n')
+    
+    local cmd = {'shfmt', '-i', '2', '-ci', '-sr'}  -- 2 spaces, case indent, space redirects
+    local result = vim.fn.system(cmd, content)
+    
+    if vim.v.shell_error == 0 then
+      local formatted_lines = vim.split(result, '\n')
+      if formatted_lines[#formatted_lines] == '' then
+        table.remove(formatted_lines)
+      end
+      vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, formatted_lines)
+      vim.api.nvim_win_set_cursor(0, cursor_pos)
+      print("Shell script formatted with shfmt")
+      return
+    else
+      print("shfmt error: " .. result)
+      return
+    end
+  end
+  
+  print("No formatter available for " .. filetype)
+end
+
+vim.api.nvim_create_user_command("FormatCode", format_code, {
+  desc = "Format current file"
+})
+
+vim.keymap.set('n', '<leader>fm', format_code, { desc = 'Format file' })
+
+-- LSP keymaps 
+vim.api.nvim_create_autocmd('LspAttach', {
+  callback = function(event)
+    local opts = {buffer = event.buf}
+
+    -- Navigation
+    vim.keymap.set('n', 'gD', vim.lsp.buf.definition, opts)
+    vim.keymap.set('n', 'gs', vim.lsp.buf.declaration, opts)
+    vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
+    vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
+
+    -- Information
+    vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
+    vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
+
+    -- Code actions
+    vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, opts)
+    vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts)
+
+    -- Diagnostics
+    vim.keymap.set('n', '<leader>nd', vim.diagnostic.goto_next, opts)
+    vim.keymap.set('n', '<leader>pd', vim.diagnostic.goto_prev, opts)
+    vim.keymap.set('n', '<leader>d', vim.diagnostic.open_float, opts)
+    vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, opts)
+  end,
+})
+
+-- Better LSP UI
+vim.diagnostic.config({
+  virtual_text = { prefix = '●' },
+  signs = true,
+  underline = true,
+  update_in_insert = false,
+  severity_sort = true,
+})
+
+vim.diagnostic.config({
+  signs = {
+    text = {
+      [vim.diagnostic.severity.ERROR] = "✗",
+      [vim.diagnostic.severity.WARN] = "⚠",
+      [vim.diagnostic.severity.INFO] = "ℹ",
+      [vim.diagnostic.severity.HINT] = "💡",
+    }
+  }
+})
+
+vim.api.nvim_create_user_command('LspInfo', function()
+  local clients = vim.lsp.get_clients({ bufnr = 0 })
+  if #clients == 0 then
+    print("No LSP clients attached to current buffer")
+  else
+    for _, client in ipairs(clients) do
+      print("LSP: " .. client.name .. " (ID: " .. client.id .. ")")
+    end
+  end
+end, { desc = 'Show LSP client info' })

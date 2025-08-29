@@ -40,6 +40,15 @@ local function file_type()
   return (icons[ft] or string.upper(string.format("[%s]", ft)))
 end
 
+-- LSP status
+local function lsp_status()
+  local clients = vim.lsp.get_clients({ bufnr = 0 })
+  if #clients > 0 then
+    return "  LSP "
+  end
+  return ""
+end
+
 -- Word count for text files
 local function word_count()
   local ft = vim.bo.filetype
@@ -88,6 +97,7 @@ _G.mode_icon = mode_icon
 _G.git_branch = git_branch
 _G.file_type = file_type
 _G.file_size = file_size
+_G.lsp_status = lsp_status
 
 vim.cmd([[
   highlight StatusLineBold gui=bold cterm=bold
@@ -108,6 +118,8 @@ local function setup_dynamic_statusline()
       "%{v:lua.file_type()}",
       " | ",
       "%{v:lua.file_size()}",
+      " | ",
+      "%{v:lua.lsp_status()}",
       "%=",                     -- Right-align everything after this
       "%l:%c  %P ",             -- Line:Column and Percentage
     }
