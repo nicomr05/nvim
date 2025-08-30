@@ -3,6 +3,7 @@
 -- ============================================================================
 
 -- Theme & transparency
+--vim.cmd[[colorscheme gruvbox]]
 vim.cmd[[colorscheme slate]]
 --vim.cmd[[colorscheme ayu]]
 --vim.cmd[[colorscheme unokai]]
