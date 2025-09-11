@@ -1,5 +1,7 @@
 # Vim Config
-Repositorio con mi configuración para Neovim.
+Repositorio con mi configuración para Neovim (créditos al final).
+
+![Ejemplo de visualización](./images/Ejemplo.png)
 
 ## Guía de instalación
 Para instalar esta configuración sólo debemos clonar este repositorio dentro de la carpeta ```.config``` y cambiar el nombre de ese directorio a ```nvim```. Los comandos serían los siguientes:
