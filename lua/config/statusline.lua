@@ -30,7 +30,8 @@ local function file_type()
     sh = "[SH]",
     dockerfile = "[DOCKER]",
     yaml = "[YAML]",
-    conf = "[CONF]"
+    conf = "[CONF]",
+    r = "[R]"
   }
 
   if ft == "" then
