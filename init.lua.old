@@ -3,6 +3,9 @@
 -- author: Radley E. Sidwell-lewis
 -- ================================================================================================
 
+-- Python manager
+vim.g.python3_host_prog = "/usr/bin/python3"
+
 -- theme & transparency
 --vim.cmd "colorscheme slate"
 vim.cmd "colorscheme alduin"
@@ -464,8 +467,10 @@ local function file_type()
     sh = "[SH]",
     dockerfile = "[DOCKER]",
     yaml = "[YAML]",
+    r = "[R]",
     conf = "[CONF]",
-    r = "[R]"
+    sshconfig = "[CONF]",
+    netrw  = "[FILE EXPLORER]"
   }
 
   if ft == "" then
@@ -622,18 +627,36 @@ local function setup_python_lsp()
   })
 end
 
+-- Lua LSP setup
+--local function setup_lua_lsp()
+--  vim.lsp.start({
+--    name = 'lua-lsp',
+--    cmd = {'lua-language-server'},
+--    filetypes = {'lua'},
+--    root_dir = find_root({ }),
+--    settings = {
+--    }
+--  })
+--end
+
 -- Auto-start LSPs based on filetype
-vim.api.nvim_create_autocmd('FileType', {
-  pattern = 'sh,bash,zsh',
-  callback = setup_shell_lsp,
-  desc = 'Start shell LSP'
-})
+--vim.api.nvim_create_autocmd('FileType', {
+--  pattern = 'sh,bash,zsh',
+--  callback = setup_shell_lsp,
+--  desc = 'Start shell LSP'
+--})
 
 vim.api.nvim_create_autocmd('FileType', {
   pattern = 'python',
   callback = setup_python_lsp,
   desc = 'Start Python LSP'
 })
+
+--vim.api.nvim_create_autocmd('FileType', {
+--  pattern = 'lua',
+--  callback = setup_lua_lsp,
+--  desc = 'Start Lua LSP'
+--})
 
 -- formatting
 local function format_code()
