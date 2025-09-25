@@ -32,7 +32,7 @@ vim.api.nvim_create_autocmd("BufReadPost", {
 -- Set filetype-specific settings
 vim.api.nvim_create_autocmd("FileType", {
   group = augroup,
-  pattern = { "lua", "python", "md" },
+  pattern = { "python", "md" },
   callback = function()
     vim.opt_local.tabstop = 4
     vim.opt_local.shiftwidth = 4
@@ -41,7 +41,7 @@ vim.api.nvim_create_autocmd("FileType", {
 
 vim.api.nvim_create_autocmd("FileType", {
   group = augroup,
-  pattern = { "javascript", "typescript", "json", "html", "css", "c", "cpp" },
+  pattern = { "lua", "javascript", "typescript", "json", "html", "css", "c", "cpp" },
   callback = function()
     vim.opt_local.tabstop = 2
     vim.opt_local.shiftwidth = 2
@@ -93,7 +93,7 @@ vim.opt.wildmode = "longest:full,full"
 vim.opt.wildignore:append({ "*.o", "*.obj", "*.pyc", "*.class", "*.jar" })
 
 -- Better diff options
---vim.opt.diffopt:append("linematch:60")
+vim.opt.diffopt:append("linematch:60")
 
 -- Performance improvements
 vim.opt.redrawtime = 10000
