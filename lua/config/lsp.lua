@@ -50,11 +50,11 @@ local function setup_python_lsp()
 end
 
 -- Auto-start LSPs based on filetype
-vim.api.nvim_create_autocmd('FileType', {
-  pattern = 'sh,bash,zsh',
-  callback = setup_shell_lsp,
-  desc = 'Start shell LSP'
-})
+--vim.api.nvim_create_autocmd('FileType', {
+--  pattern = 'sh,bash,zsh',
+--  callback = setup_shell_lsp,
+--  desc = 'Start shell LSP'
+--})
 
 vim.api.nvim_create_autocmd('FileType', {
   pattern = 'python',
