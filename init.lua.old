@@ -98,6 +98,15 @@ vim.g.maplocalleader = " "                         -- Set local leader key (NEW)
 -- Normal mode mappings
 vim.keymap.set("n", "<leader>c", ":nohlsearch<CR>", { desc = "Clear search highlights" })
 
+-- Automatic brackets
+vim.cmd[[inoremap " ""<left>]]
+vim.cmd[[inoremap ' ''<left>]]
+vim.cmd[[inoremap ( ()<left>]]
+vim.cmd[[inoremap [ []<left>]]
+vim.cmd[[inoremap { {}<left>]]
+vim.cmd[[inoremap {<CR> {<CR>}<ESC>O]]
+vim.cmd[[inoremap {;<CR> {<CR>};<ESC>O]]
+
 -- Center screen when jumping
 vim.keymap.set("n", "n", "nzzzv", { desc = "Next search result (centered)" })
 vim.keymap.set("n", "N", "Nzzzv", { desc = "Previous search result (centered)" })
