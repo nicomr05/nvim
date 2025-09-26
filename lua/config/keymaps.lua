@@ -14,6 +14,15 @@ vim.keymap.set("n", "[q", ":cprev <CR>")
 -- Normal mode mappings
 vim.keymap.set("n", "<leader>c", ":nohlsearch<CR>", { desc = "Clear search highlights" })
 
+-- Automatic brackets
+vim.cmd[[inoremap " ""<left>]]
+vim.cmd[[inoremap ' ''<left>]]
+vim.cmd[[inoremap ( ()<left>]]
+vim.cmd[[inoremap [ []<left>]]
+vim.cmd[[inoremap { {}<left>]]
+vim.cmd[[inoremap {<CR> {<CR>}<ESC>O]]
+vim.cmd[[inoremap {;<CR> {<CR>};<ESC>O]]
+
 -- Y to EOL
 vim.keymap.set("n", "Y", "y$", { desc = "Yank to end of line" })
 
