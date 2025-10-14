@@ -10,19 +10,19 @@ local function find_root(patterns)
 end
 
 -- Shell LSP setup
-local function setup_shell_lsp()
-  vim.lsp.start({
-    name = 'bashls',
-    cmd = {'bash-language-server', 'start'},
-    filetypes = {'sh', 'bash', 'zsh'},
-    root_dir = find_root({'.git', 'Makefile'}),
-    settings = {
-      bashIde = {
-        globPattern = "*@(.sh|.inc|.bash|.command)"
-      }
-    }
-  })
-end
+--local function setup_shell_lsp()
+--  vim.lsp.start({
+--    name = 'bashls',
+--    cmd = {'bash-language-server', 'start'},
+--    filetypes = {'sh', 'bash', 'zsh'},
+--    root_dir = find_root({'.git', 'Makefile'}),
+--    settings = {
+--      bashIde = {
+--        globPattern = "*@(.sh|.inc|.bash|.command)"
+--      }
+--    }
+--  })
+--end
 
 -- Python LSP setup
 local function setup_python_lsp()
@@ -49,6 +49,29 @@ local function setup_python_lsp()
   })
 end
 
+local function setup_lua_lsp()
+  vim.lsp.start({
+    name = 'luals',
+    -- Command and arguments to start the server.
+    cmd = {'lua-language-server'},
+    -- Filetypes to automatically attach to.
+    filetypes = {'lua'},
+    -- Sets the "workspace" to the directory where any of these files is found.
+    -- Files that share a root directory will reuse the LSP server connection.
+    -- Nested lists indicate equal priority, see |vim.lsp.Config|.
+    root_markers = { { '.luarc.json', '.luarc.jsonc' }, '.git' },
+    -- Specific settings to send to the server. The schema is server-defined.
+    -- Example: https://raw.githubusercontent.com/LuaLS/vscode-lua/master/setting/schema.json
+    settings = {
+      Lua = {
+        runtime = {
+          version = 'LuaJIT',
+        }
+      }
+    }
+  })
+end
+
 -- Auto-start LSPs based on filetype
 --vim.api.nvim_create_autocmd('FileType', {
 --  pattern = 'sh,bash,zsh',
@@ -60,6 +83,12 @@ vim.api.nvim_create_autocmd('FileType', {
   pattern = 'python',
   callback = setup_python_lsp,
   desc = 'Start Python LSP'
+})
+
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = 'lua',
+  callback = setup_lua_lsp,
+  desc = 'Start Lua LSP'
 })
 
 -- formatting
