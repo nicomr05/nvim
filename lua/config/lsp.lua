@@ -29,7 +29,7 @@ local function setup_python_lsp()
   vim.lsp.start({
     name = 'pylsp',
     cmd = {'pylsp'},
-    filetypes = {'python'},
+    filetypes = {'py', 'python'},
     root_dir = find_root({'pyproject.toml', 'setup.py', 'setup.cfg', 'requirements.txt', '.git'}),
     settings = {
       pylsp = {
