@@ -33,14 +33,14 @@ local function setup_python_lsp()
     root_dir = find_root({'pyproject.toml', 'setup.py', 'setup.cfg', 'requirements.txt', '.git'}),
     settings = {
       pylsp = {
-        plugins = { 
+        plugins = {
           pycodestyle = {
               enabled = false
           },
           flake8 = {
-              enabled = true,
+              enabled = false
           },
-          black = { 
+          black = {
               enabled = true
           }
         }
@@ -80,7 +80,7 @@ end
 --})
 
 vim.api.nvim_create_autocmd('FileType', {
-  pattern = 'python',
+  pattern = 'py,python',
   callback = setup_python_lsp,
   desc = 'Start Python LSP'
 })
@@ -96,19 +96,19 @@ local function format_code()
   local bufnr = vim.api.nvim_get_current_buf()
   local filename = vim.api.nvim_buf_get_name(bufnr)
   local filetype = vim.bo[bufnr].filetype
-  
+
   -- Save cursor position
   local cursor_pos = vim.api.nvim_win_get_cursor(0)
-  
+
   if filetype == 'python' or filename:match('%.py$') then
     if filename == '' then
       print("Save the file first before formatting Python")
       return
     end
-    
+
     local black_cmd = "black --quiet " .. vim.fn.shellescape(filename)
     local black_result = vim.fn.system(black_cmd)
-    
+
     if vim.v.shell_error == 0 then
       vim.cmd('checktime')
       vim.api.nvim_win_set_cursor(0, cursor_pos)
@@ -119,14 +119,14 @@ local function format_code()
       return
     end
   end
-  
+
   if filetype == 'sh' or filetype == 'bash' or filename:match('%.sh$') then
     local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
     local content = table.concat(lines, '\n')
-    
+
     local cmd = {'shfmt', '-i', '2', '-ci', '-sr'}  -- 2 spaces, case indent, space redirects
     local result = vim.fn.system(cmd, content)
-    
+
     if vim.v.shell_error == 0 then
       local formatted_lines = vim.split(result, '\n')
       if formatted_lines[#formatted_lines] == '' then
@@ -141,7 +141,7 @@ local function format_code()
       return
     end
   end
-  
+
   print("No formatter available for " .. filetype)
 end
 
@@ -164,7 +164,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
 
     -- Information
     vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
-    vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
+    vim.keymap.set('n', '<C-a>', vim.lsp.buf.signature_help, opts)
 
     -- Code actions
     vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, opts)
