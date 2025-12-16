@@ -34,15 +34,10 @@ local function setup_python_lsp()
     settings = {
       pylsp = {
         plugins = {
-          pycodestyle = {
-              enabled = false
-          },
-          flake8 = {
-              enabled = false
-          },
-          black = {
-              enabled = true
-          }
+          starkiller  = {enabled = true},
+          pycodestyle = {enabled = false},
+          flake8      = {enabled = false},
+          black       = {enabled = true}
         }
       }
     }
@@ -64,9 +59,7 @@ local function setup_lua_lsp()
     -- Example: https://raw.githubusercontent.com/LuaLS/vscode-lua/master/setting/schema.json
     settings = {
       Lua = {
-        runtime = {
-          version = 'LuaJIT',
-        }
+        runtime = {version = 'LuaJIT',}
       }
     }
   })
