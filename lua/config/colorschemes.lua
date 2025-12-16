@@ -3,8 +3,8 @@
 -- ============================================================================
 
 -- Theme & transparency
---vim.cmd[[colorscheme slate]]
-vim.cmd[[colorscheme alduin]]
+vim.cmd[[colorscheme slate]]
+--vim.cmd[[colorscheme alduin]]
 --vim.cmd[[colorscheme slate]]
 --vim.cmd[[colorscheme gruvbox]]
 --vim.cmd[[colorscheme retrobox]]
